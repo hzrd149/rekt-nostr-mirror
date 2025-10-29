@@ -1,0 +1,62 @@
+name: Mirror Rekt.news to Nostr
+
+on:
+  # Run every day at midnight UTC
+  schedule:
+    - cron: "0 0 * * *"
+
+  # Allow manual triggering from GitHub UI
+  workflow_dispatch:
+    inputs:
+      article_limit:
+        description: "Number of articles to fetch"
+        required: false
+        default: "5"
+        type: string
+      publish_delay:
+        description: "Delay between publications (ms)"
+        required: false
+        default: "5000"
+        type: string
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run Rekt.news mirror
+        env:
+          NOSTR_KEY: ${{ secrets.NOSTR_KEY }}
+        run: |
+          # Use workflow_dispatch inputs if available, otherwise use defaults
+          LIMIT="${{ github.event.inputs.article_limit || '5' }}"
+          DELAY="${{ github.event.inputs.publish_delay || '5000' }}"
+
+          bun run index.ts \
+            --signer "$NOSTR_KEY" \
+            --limit "$LIMIT" \
+            --delay "$DELAY"
+
+      - name: Report completion
+        if: success()
+        run: |
+          echo "✅ Successfully mirrored articles to Nostr"
+          echo "Time: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "❌ Failed to mirror articles"
+          echo "Time: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          exit 1
