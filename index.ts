@@ -134,6 +134,10 @@ class RektNostrMirror {
           console.log(`${index + 1}. ${id}`);
         });
       }
+
+      // Give a moment for any pending operations to complete
+      console.log("\n✅ All done! Closing connections...");
+      await new Promise((resolve) => setTimeout(resolve, 100));
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);

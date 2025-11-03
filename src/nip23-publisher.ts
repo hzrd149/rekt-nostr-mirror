@@ -122,12 +122,6 @@ export class NIP23Publisher {
 
     return new Promise((resolve) => {
       let confirmations = 0;
-      const timeout = setTimeout(() => {
-        console.log(
-          `✅ Publication completed with ${confirmations}/${relays.length} confirmations`,
-        );
-        resolve();
-      }, 5000); // Wait max 5 seconds
 
       // Subscribe to see if the event appears on relays
       const observable = pool.subscription(relays, {
@@ -145,6 +139,14 @@ export class NIP23Publisher {
           resolve();
         }
       });
+
+      const timeout = setTimeout(() => {
+        subscription.unsubscribe(); // Always unsubscribe on timeout
+        console.log(
+          `✅ Publication completed with ${confirmations}/${relays.length} confirmations`,
+        );
+        resolve();
+      }, 5000); // Wait max 5 seconds
     });
   }
 

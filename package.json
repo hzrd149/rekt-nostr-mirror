@@ -7,18 +7,18 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "applesauce-core": "^4",
-    "applesauce-relay": "^4",
-    "applesauce-signers": "^4",
-    "cheerio": "^1.0.0",
-    "turndown": "^7.2.0",
+    "applesauce-core": "^4.1.0",
+    "applesauce-relay": "^4.1.0",
+    "applesauce-signers": "^4.1.0",
+    "cheerio": "^1.1.2",
+    "turndown": "^7.2.2",
     "turndown-plugin-gfm": "^1.0.2",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/turndown": "^5.0.5",
-    "@types/yargs": "^17.0.33",
+    "@types/turndown": "^5.0.6",
+    "@types/yargs": "^17.0.34",
     "prettier": "^3.6.2"
   }
 }
